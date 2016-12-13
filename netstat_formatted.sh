@@ -26,7 +26,7 @@ STATS="State from: ${DATE} - from host with IP:${IP} - named: ${MACHINE} - with 
 # Text and formatting functions
 COLUMNS="$(tput cols)";
 
-# Command functions
+# Seperator functions
 seperatorA(){ printf -v _hr "%*s" ${COLUMNS} && echo ${_hr// /${1-=}}; }
 seperatorB(){ printf -v _hr "%*s" ${COLUMNS} && echo ${_hr// /${1-_}}; }
 seperatorC(){ printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -; }
@@ -42,7 +42,6 @@ TOPTENCPU="Top 10 CPU killer:";
 IOSTAT="I/O CPU statistics for device and partition:";
 NSTAT="NETSTAT SECTION";
 NSTATCONPORTS="Which ports are open - which connections are up:";
-NETSTATAGIN="Again with netstat:";
 NMAPAGAIN="Again with nmap (this can take longer time, please be patient):";
 LSOFAGAIN="IPv4 check with lsof:";
 SSAGAIN="UDP und TCP check with ss:";
