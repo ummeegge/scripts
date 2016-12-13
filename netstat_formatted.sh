@@ -42,7 +42,6 @@ TOPTENCPU="Top 10 CPU killer:";
 IOSTAT="I/O CPU statistics for device and partition:";
 NSTAT="NETSTAT SECTION";
 NSTATCONPORTS="Which ports are open - which connections are up:";
-NMAPAGAIN="Again with nmap (this can take longer time, please be patient):";
 LSOFAGAIN="IPv4 check with lsof:";
 SSAGAIN="UDP und TCP check with ss:";
 OVPNIFACE="OpenVPN Interfaces check:";
@@ -154,17 +153,6 @@ netstat -antpuew;
 echo;
 echo;
 
-if [ -n "$(command -v nmap)" ]; then
-	seperatorB;
-	echo;
-	printf "%*s\n" $(((${#NMAPAGAIN}+$COLUMNS)/2)) "${NMAPAGAIN}";
-	seperatorC;
-	echo;
-	nmap -v -p 1-65535 localhost;
-	echo;
-	echo;
-fi
-
 seperatorB;
 echo;
 printf "%*s\n" $(((${#LSOFAGAIN}+$COLUMNS)/2)) "${LSOFAGAIN}";
@@ -236,7 +224,11 @@ echo;
 printf "%*s\n" $(((${#DDOS}+$COLUMNS)/2)) "${DDOS}";
 seperatorC;
 echo;
-netstat -atun | awk '{print $5}' | cut -d: -f1 | sed -e '/^$/d' | sort | uniq -c | sort -n;
+echo "Check ESTABLISHED connections and connections count"
+netstat -ntu | grep ESTAB | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr;
+echo;
+echo "Count numbers of connections for each IP";
+netstat -ntu | awk '{print $5}' | tail -n +3 | cut -d: -f1 | sort | uniq -c | sort -n
 echo;
 echo;
 
