@@ -6,12 +6,13 @@
 # menu entries under /var/ipfire/menu.d/ .
 # If no entries has been found, it will echo it to files for each language which
 # will be used to delete them from the respective language file.
+# A check will processed which checks for missing deletions.
 # All files can be found under /tmp .
 # The script operates in working environment but it should be managable to
 # generate all diffs by copying the new files to the building env which should
 # then delivers applicable diffs.
 #
-# $Author: ummeegge ; $date: 02.05.2017
+# $Author: ummeegge ; $date: 03.05.2017
 ################################################################################
 #
 
@@ -34,12 +35,11 @@ cd ${DIR};
 
 echo "You can easily go for a tankard of coffe now ;-) ... ";
 echo;
-sleep 3;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/en.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/en
+        echo "$i" >> ${DIR}/en;
     fi
 done
 
@@ -50,7 +50,7 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/de.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/de
+        echo "$i" >> ${DIR}/de;
     fi
 done
 
@@ -61,7 +61,7 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/es.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/es
+        echo "$i" >> ${DIR}/es;
     fi
 done
 
@@ -72,7 +72,7 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/fr.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/fr
+        echo "$i" >> ${DIR}/fr;
     fi
 done
 
@@ -83,7 +83,7 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/it.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/it
+        echo "$i" >> ${DIR}/it;
     fi
 done
 
@@ -94,7 +94,7 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/nl.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/nl
+        echo "$i" >> ${DIR}/nl;
     fi
 done
 
@@ -105,7 +105,7 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/pl.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/pl
+        echo "$i" >> ${DIR}/pl;
     fi
 done
 
@@ -116,7 +116,7 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/ru.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/ru
+        echo "$i" >> ${DIR}/ru;
     fi
 done
 
@@ -127,14 +127,18 @@ echo;
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/tr.pl)
 do
     if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
-        echo "$i" >> ${DIR}/tr
+        echo "$i" >> ${DIR}/tr;
     fi
 done
 
-echo "---------------------------------------------------------------------------":
-echo "Puhh lots of hastle here today :-| ... ";
+echo "Turkish has been checked... ";
+echo;
+echo "All languages has been compared and the lost strings has been printed to ${DIR} ."
+echo;
+
+echo "---------------------------------------------------------------------------";
+echo "Puhh lots of hassle here today :-| ... ";
 echo "Need to strip the lost ones out... stay tuned ;-) "
-sleep 3;
 echo "---------------------------------------------------------------------------";
 echo;
 
@@ -187,6 +191,14 @@ done
 echo "Dutch is done... ";
 echo;
 
+for l in $(cat pl)
+do
+    sed -i "/${l}/d" ${LANGS}/pl.pl;
+done
+
+echo "Polish is done... ";
+echo;
+
 for l in $(cat ru)
 do
     sed -i "/${l}/d" ${LANGS}/ru.pl;
@@ -204,13 +216,124 @@ echo "Turkish is done... ";
 echo;
 
 update-lang-cache;
+echo "The language cache has been updated. From now on, all changes can be overviewed over the WUI. ";
+
+echo "--------------------------------------------------------------------------------------------------";
+echo;
+echo " If there are some 'sed: -e expression #1, char 1: unknown command' errors, ";
+echo "there might be variables with an slash '/' in it .";
+echo "A test will now follow, so if the script has been finished, it will print the strings out for you.";
+echo "You can also find all files under ${DIR} .";
+echo;
+echo "--------------------------------------------------------------------------------------------------";
+
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/de.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/de_rest_entries;
+    fi
+done
+
+echo "German has been tested... ";
+echo "8 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/en.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/en_rest_entries;
+    fi
+done
+
+echo "English has been tested... ";
+echo "7 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/es.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/es_rest_entries;
+    fi
+done
+
+echo "Spanish has been tested... ";
+echo "6 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/fr.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/fr_rest_entries
+    fi
+done
+
+echo "French has been tested... ";
+echo "5 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/it.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/it_rest_entries;
+    fi
+done
+
+echo "Italian has been tested... ";
+echo "4 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/nl.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/nl_rest_entries;
+    fi
+done
+
+echo "Dutch has been tested... ";
+echo "3 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/pl.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/pl_rest_entries;
+    fi
+done
+
+echo "Polish has been tested... ";
+echo "2 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/ru.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/ru_rest_entries;
+    fi
+done
+
+echo "Russian has been tested... ";
+echo "1 languages are left";
+echo;
+
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/tr.pl)
+do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ]; then
+        echo "$i" >> ${DIR}/tr_rest_entries;
+    fi
+done
+
+echo "Turkish has been tested... ";
 
 echo;
 echo;
+echo "====================================================================================================";
+echo "Show you all entries which has not been deleted, please delete them manually or try a better script.";
+echo "                                All files can be found under ${DIR}                                ".;
+echo "====================================================================================================";
 echo;
-echo " If there are some 'sed: -e expression #1, char 1: unknown command' errors, you need to fix them manually by";
-echo "deleting all strings with an slash '/' in it .";
-echo "That´s it cheers and... Goodbye";
-
+head -n99999999 ${DIR}/*_rest_entries;
+echo;
+echo;
 
 # End script
