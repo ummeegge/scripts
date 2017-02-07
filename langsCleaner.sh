@@ -310,7 +310,7 @@ echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/ru.pl)
 do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)"] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)"] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)"]; then
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/ru_rest_entries;
     fi
 done
