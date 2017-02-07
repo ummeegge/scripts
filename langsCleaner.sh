@@ -14,10 +14,11 @@
 #
 # $Author: ummeegge ; $date: 07.02.2017
 ############################################################################################
-#
 
+# End of line is seperator
 IFS=$'\n'
 
+# Locations
 DIR="/tmp/strings_not_found";
 LANGS="/var/ipfire/langs";
 CGI="/srv/web/ipfire/cgi-bin"
@@ -26,18 +27,50 @@ PLS="/var/ipfire";
 THEMES="/srv/web/ipfire/html/themes/*/*";
 PAKFIRE="/opt/pakfire/lib";
 
-# Add dir if not already presant
+# Formatting functions
+COLUMNS="$(tput cols)";
+R=$(tput setaf 1);
+G=$(tput setaf 2);
+B=$(tput setaf 6);
+b=$(tput bold);
+N=$(tput sgr0);
+# Text
+TITEL="Searcher and clean up script for dead language file strings - You can easily go for a tankard of coffe now ;-)";
+END="That´s it all work has been done, will go for a beer now. Tschüssle";
+HASSLEA="Puhh lots of hassle here today :-| ...";
+HASSLE="Need to strip the lost ones out... stay tuned ;-) ";
+ERROR="If there are some 'sed: -e expression #1, char 1: unknown command' errors, ";
+ERRORA="there might be variables with an slash '/' in it .";
+ERRORB="A test will now follow, so if the script has been finished, it will print the strings out for you.";
+ERRORC="You can also find all files under ${DIR} .";
+COPY="All languages has been compared and the lost strings has been printed to ${DIR} ."
+LANG="The language cache has been updated. From now on, all changes can be overviewed over the WUI. ";
+RESULT="Show you all entries which has not been deleted, please delete them manually or try a better script.";
+REUSLTA="All files can be found under ${DIR} .";
+# Seperator functions
+seperator(){ printf -v _hr "%*s" ${COLUMNS} && echo ${_hr// /${1-=}}; }
+
+
+## Main part
+clear;
+echo;
+printf "%*s\n" $(((${#TITEL}+$COLUMNS)/2)) "${TITEL}";
+echo;
+seperator;
+echo;
+echo;
+
+# Status bar
+while true; do echo -n .; sleep 1; done &
+trap 'kill $!' SIGTERM SIGKILL
+
+# Add dir if not already presant and change working place
 if [ ! -d "${DIR}" ]; then
     mkdir ${DIR};
 fi
-
 cd ${DIR};
 
-## Main part
 # Investigate unused entries
-
-echo "You can easily go for a tankard of coffe now ;-) ... ";
-echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/en.pl)
 do
@@ -46,8 +79,9 @@ do
     fi
 done
 
-echo "English has been checked... ";
-echo "8 languages are left";
+echo -e "${B}English has been checked... ${N}";
+echo;
+echo -e "${R}8 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/de.pl)
@@ -57,8 +91,9 @@ do
     fi
 done
 
-echo "German has been checked... ";
-echo "7 languages are left";
+echo -e "${B}German has been checked... ${N}";
+echo;
+echo -e "${R}7 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/es.pl)
@@ -68,8 +103,9 @@ do
     fi
 done
 
-echo "Spanish has been checked... ";
-echo "6 languages are left";
+echo -e "${B}Spanish has been checked... ${N}";
+echo;
+echo -e "${R}6 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/fr.pl)
@@ -79,8 +115,9 @@ do
     fi
 done
 
-echo "French has been checked... ";
-echo "5 languages are left";
+echo -e "${B}French has been checked... ${N}";
+echo;
+echo -e "${R}5 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/it.pl)
@@ -90,8 +127,9 @@ do
     fi
 done
 
-echo "Italian has been checked... ";
-echo "4 languages are left";
+echo -e "${B}Italian has been checked... ${N}";
+echo;
+echo -e "${R}4 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/nl.pl)
@@ -101,8 +139,9 @@ do
     fi
 done
 
-echo "Dutch has been checked... ";
-echo "3 languages are left";
+echo -e "${B}Dutch has been checked... ${N}";
+echo;
+echo -e "${R}3 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/pl.pl)
@@ -112,8 +151,9 @@ do
     fi
 done
 
-echo "Polish has been checked... ";
-echo "2 languages are left";
+echo -e "${B}Polish has been checked... ${N}";
+echo;
+echo -e "${R}2 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/ru.pl)
@@ -123,8 +163,9 @@ do
     fi
 done
 
-echo "Russian has been checked... ";
-echo "1 language is left";
+echo -e "${B}Russian has been checked... ${N}";
+echo;
+echo -e "${R}1 language is left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/tr.pl)
@@ -134,15 +175,17 @@ do
     fi
 done
 
-echo "Turkish has been checked... ";
-echo;
-echo "All languages has been compared and the lost strings has been printed to ${DIR} ."
+echo -e "${B}Turkish has been checked... ${N}";
 echo;
 
-echo "---------------------------------------------------------------------------";
-echo "Puhh lots of hassle here today :-| ... ";
-echo "Need to strip the lost ones out... stay tuned ;-) "
-echo "---------------------------------------------------------------------------";
+echo;
+echo;
+seperator;
+printf "%*s\n" $(((${#COPY}+$COLUMNS)/2)) "${COPY}";
+printf "%*s\n" $(((${#HASSLE}+$COLUMNS)/2)) "${HASSLE}";
+printf "%*s\n" $(((${#HASSLEA}+$COLUMNS)/2)) "${HASSLEA}";
+seperator;
+echo;
 echo;
 
 # Delete entries in langs dir from investigated lists
@@ -151,7 +194,7 @@ do
     sed -i "/${l}/d" ${LANGS}/en.pl;
 done
 
-echo "English is done... ";
+echo -e "${B}English is done... ${N}";
 echo;
 
 for l in $(cat de)
@@ -159,7 +202,7 @@ do
     sed -i "/${l}/d" ${LANGS}/de.pl;
 done
 
-echo "German is done... ";
+echo -e "${B}German is done... ${N}";
 echo;
 
 for l in $(cat es)
@@ -167,7 +210,7 @@ do
     sed -i "/${l}/d" ${LANGS}/es.pl;
 done
 
-echo "Spanish is done... ";
+echo -e "${B}Spanish is done... ${N}";
 echo;
 
 for l in $(cat fr)
@@ -175,7 +218,7 @@ do
     sed -i "/${l}/d" ${LANGS}/fr.pl;
 done
 
-echo "French is done... ";
+echo -e "${B}French is done... ${N}";
 echo;
 
 for l in $(cat it)
@@ -183,7 +226,7 @@ do
     sed -i "/${l}/d" ${LANGS}/it.pl;
 done
 
-echo "Polish is done... ";
+echo -e "${B}Italian is done... ${N}";
 echo;
 
 for l in $(cat nl)
@@ -191,7 +234,7 @@ do
     sed -i "/${l}/d" ${LANGS}/nl.pl;
 done
 
-echo "Dutch is done... ";
+echo -e "${B}Dutch is done... ${N}";
 echo;
 
 for l in $(cat pl)
@@ -199,7 +242,7 @@ do
     sed -i "/${l}/d" ${LANGS}/pl.pl;
 done
 
-echo "Polish is done... ";
+echo -e "${B}Polish is done... ${N}";
 echo;
 
 for l in $(cat ru)
@@ -207,7 +250,7 @@ do
     sed -i "/${l}/d" ${LANGS}/ru.pl;
 done
 
-echo "Russian is done... ";
+echo -e "${B}Russian is done... ${N}";
 echo;
 
 for l in $(cat tr)
@@ -215,20 +258,24 @@ do
     sed -i "/${l}/d" ${LANGS}/tr.pl;
 done
 
-echo "Turkish is done... ";
+echo -e "${B}Turkish is done... ${N}";
 echo;
 
-update-lang-cache;
-echo "The language cache has been updated. From now on, all changes can be overviewed over the WUI. ";
+update-lang-cache > /dev/null 2>&1
+echo;
+echo;
+printf "%*s\n" $(((${#LANG}+$COLUMNS)/2)) "${LANG}";
+echo;
+echo;
 
-echo "--------------------------------------------------------------------------------------------------";
+seperator;
 echo;
-echo " If there are some 'sed: -e expression #1, char 1: unknown command' errors, ";
-echo "there might be variables with an slash '/' in it .";
-echo "A test will now follow, so if the script has been finished, it will print the strings out for you.";
-echo "You can also find all files under ${DIR} .";
+printf "%*s\n" $(((${#ERROR}+$COLUMNS)/2)) "${ERROR}";
+printf "%*s\n" $(((${#ERRORA}+$COLUMNS)/2)) "${ERRORA}";
+printf "%*s\n" $(((${#ERRORB}+$COLUMNS)/2)) "${ERRORB}";
+printf "%*s\n" $(((${#ERRORC}+$COLUMNS)/2)) "${ERRORC}";
 echo;
-echo "--------------------------------------------------------------------------------------------------";
+seperator;
 
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/de.pl)
@@ -238,8 +285,11 @@ do
     fi
 done
 
-echo "German has been tested... ";
-echo "8 languages are left";
+echo;
+echo;
+echo -e "${B}German has been tested... ${N}";
+echo;
+echo -e "${R}8 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/en.pl)
@@ -249,8 +299,9 @@ do
     fi
 done
 
-echo "English has been tested... ";
-echo "7 languages are left";
+echo -e "${B}English has been tested... ${N}";
+echo;
+echo -e "${R}7 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/es.pl)
@@ -260,8 +311,9 @@ do
     fi
 done
 
-echo "Spanish has been tested... ";
-echo "6 languages are left";
+echo -e "${B}Spanish has been tested... ${N}";
+echo;
+echo -e "${R}6 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/fr.pl)
@@ -271,8 +323,9 @@ do
     fi
 done
 
-echo "French has been tested... ";
-echo "5 languages are left";
+echo -e "${B}French has been tested... ${N}";
+echo;
+echo -e "${R}5 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/it.pl)
@@ -282,8 +335,9 @@ do
     fi
 done
 
-echo "Italian has been tested... ";
-echo "4 languages are left";
+echo -e "${B}Italian has been tested... ${N}";
+echo;
+echo -e "${R}4 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/nl.pl)
@@ -293,8 +347,9 @@ do
     fi
 done
 
-echo "Dutch has been tested... ";
-echo "3 languages are left";
+echo -e "${B}Dutch has been tested... ${N}";
+echo;
+echo -e "${R}3 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/pl.pl)
@@ -304,8 +359,9 @@ do
     fi
 done
 
-echo "Polish has been tested... ";
-echo "2 languages are left";
+echo -e "${B}Polish has been tested... ${N}";
+echo;
+echo -e "${R}2 languages are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/ru.pl)
@@ -315,8 +371,9 @@ do
     fi
 done
 
-echo "Russian has been tested... ";
-echo "1 languages are left";
+echo -e "${B}Russian has been tested... ${N}";
+echo;
+echo -e "${R}1 language are left${N}";
 echo;
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/tr.pl)
@@ -326,17 +383,23 @@ do
     fi
 done
 
-echo "Turkish has been tested... ";
+echo "${B}Turkish has been tested... ${N}";
 
 echo;
 echo;
-echo "====================================================================================================";
-echo "Show you all entries which has not been deleted, please delete them manually or try a better script.";
-echo "                                All files can be found under ${DIR}                                ".;
-echo "====================================================================================================";
+seperator;
+printf "%*s\n" $(((${#RESULT}+$COLUMNS)/2)) "${RESULT}";
+printf "%*s\n" $(((${#RESULTA}+$COLUMNS)/2)) "${RESULTA}";
+seperator;
+echo;
 echo;
 head -n99999999 ${DIR}/*_rest_entries;
 echo;
 echo;
+printf "%*s\n" $(((${#END}+$COLUMNS)/2)) "${END}";
+echo;
+echo;
+
+kill $!
 
 # End script
