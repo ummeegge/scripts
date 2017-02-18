@@ -12,7 +12,7 @@
 # generate all diffs by copying the new files to the building env which should
 # then delivers applicable diffs.
 #
-# $Author: ummeegge ; $date: 17.02.2017
+# $Author: ummeegge ; $date: 07.02.2017
 ############################################################################################
 
 # End of line is seperator
@@ -82,9 +82,12 @@ trap 'kill $!' SIGTERM SIGKILL
 
 # Investigate unused entries
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*en.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*en.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/en;
     fi
 done
@@ -94,9 +97,12 @@ echo;
 echo -e "${R}8 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*de.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*de.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/de;
     fi
 done
@@ -106,9 +112,12 @@ echo;
 echo -e "${R}7 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*es.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*es.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/es;
     fi
 done
@@ -118,9 +127,12 @@ echo;
 echo -e "${R}6 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*fr.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*fr.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/fr;
     fi
 done
@@ -130,9 +142,12 @@ echo;
 echo -e "${R}5 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*it.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*it.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/it;
     fi
 done
@@ -142,9 +157,12 @@ echo;
 echo -e "${R}4 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*nl.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*nl.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/nl;
     fi
 done
@@ -154,9 +172,12 @@ echo;
 echo -e "${R}3 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*pl.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*pl.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/pl;
     fi
 done
@@ -166,9 +187,12 @@ echo;
 echo -e "${R}2 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*ru.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*ru.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/ru;
     fi
 done
@@ -178,9 +202,12 @@ echo;
 echo -e "${R}1 language is left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*tr.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*tr.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/tr;
     fi
 done
@@ -288,9 +315,12 @@ echo;
 seperator;
 
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*de.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*de.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/de_rest_entries;
     fi
 done
@@ -300,9 +330,12 @@ echo;
 echo -e "${R}8 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*en.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*en.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/en_rest_entries;
     fi
 done
@@ -312,9 +345,12 @@ echo;
 echo -e "${R}7 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*es.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*es.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/es_rest_entries;
     fi
 done
@@ -324,9 +360,12 @@ echo;
 echo -e "${R}6 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*fr.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*fr.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/fr_rest_entries
     fi
 done
@@ -336,9 +375,12 @@ echo;
 echo -e "${R}5 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*it.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*it.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/it_rest_entries;
     fi
 done
@@ -348,9 +390,12 @@ echo;
 echo -e "${R}4 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*nl.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*nl.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/nl_rest_entries;
     fi
 done
@@ -360,9 +405,12 @@ echo;
 echo -e "${R}3 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*pl.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*pl.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/pl_rest_entries;
     fi
 done
@@ -372,9 +420,12 @@ echo;
 echo -e "${R}2 languages are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*ru.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*ru.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/ru_rest_entries;
     fi
 done
@@ -384,9 +435,12 @@ echo;
 echo -e "${R}1 language are left${N}";
 echo;
 
-for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*tr.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
+for i in $(awk -F"'" '{ print $2 }' ${LANGS}/*tr.pl); do
+    if [ -z "$(grep -FR "${i}" ${CGI}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${MENU}/*)" ] && \
+        [ -z "$(grep -FR "${i}" ${PLS}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${THEMES}/*.pl)" ] && \
+        [ -z "$(grep -FR "${i}" ${PAKFIRE}/*.pl)" ]; then
         echo "$i" >> ${DIR}/tr_rest_entries;
     fi
 done
