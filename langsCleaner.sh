@@ -11,8 +11,10 @@
 # The script operates in working environment but it should be managable to
 # generate all diffs by copying the new files to the building env which should
 # then delivers applicable diffs.
+# Script will compute deleted lines in language files.
+# Diffs after processing will be generated if desired.
 #
-# $Author: ummeegge ; $date: 07.02.2017
+# $Author: ummeegge ; $mail: $Author at web de ; $date: 19.02.2017
 ############################################################################################
 
 # End of line is seperator
@@ -26,6 +28,8 @@ MENU="/var/ipfire/menu.d";
 PLS="/var/ipfire";
 THEMES="/srv/web/ipfire/html/themes/*/*";
 PAKFIRE="/opt/pakfire/lib";
+BCK="${DIR}/langs_orig_bck";
+DIF="${DIR}/diffs";
 LCB="LineCounter_before";
 LCA="LineCounter_after";
 
@@ -39,8 +43,8 @@ N=$(tput sgr0);
 # Text
 TITEL="Clean up script for dead language file strings - You can easily go for a tankard of coffe now ;-)";
 END="That´s it, all work has been done, will go for a beer now. Tschüssle";
-HASSLEA="Puhh lots of hassle here today :-| ...";
 HASSLE="Need to strip the lost ones out... stay tuned ;-) ";
+HASSLEA="Puhh lots of hassle here today :-| ...";
 ERROR="If there are some 'sed: -e expression #1, char 1: unknown command' errors, ";
 ERRORA="there might be variables with an slash '/' in it .";
 ERRORB="A test will now follow, so if the script has been finished, it will print the strings out for you if something exists.";
@@ -51,6 +55,7 @@ RESULT="Show you all entries which has not been deleted, please delete them manu
 RESULTA="All files can be found under ${DIR} if something has been done there.";
 RESULTB="This count of deleted lines can also be found under '${DIR}/deleted_lines_result' if there has been something deleted.";
 RESULTC="Count of all deleted lines per language";
+DIFF="DIFF section if needed";
 # Seperator functions
 seperator(){ printf -v _hr "%*s" ${COLUMNS} && echo ${_hr// /${1-=}}; }
 
@@ -71,7 +76,7 @@ fi
 cd ${DIR};
 
 # Backup of existing files
-cp -R ${LANGS}/ ${DIR}/langs_orig_bck
+cp -R ${LANGS}/ ${BCK}/;
 
 # Count lines before processing
 wc -l /var/ipfire/langs/*.pl | tail -n +2 >> ${DIR}/${LCB};
@@ -314,6 +319,7 @@ printf "%*s\n" $(((${#ERRORB}+$COLUMNS)/2)) "${ERRORB}";
 printf "%*s\n" $(((${#ERRORC}+$COLUMNS)/2)) "${ERRORC}";
 echo;
 seperator;
+echo;
 
 
 for i in $(awk -F"'" '{ print $2 }' ${LANGS}/de.pl); do
@@ -459,7 +465,7 @@ printf "%*s\n" $(((${#RESULTA}+$COLUMNS)/2)) "${RESULTA}";
 seperator;
 echo;
 echo;
-head -n99999999 ${DIR}/*_rest_entries > /dev/null 2>&1;
+head -n99999999 ${DIR}/*_rest_entries;
 echo;
 echo;
 
@@ -476,6 +482,39 @@ paste {$DIR/$LCB,$DIR/$LCA} | awk '{ print $1-$3,"\tLines has been deleted in   
 cat ${DIR}/deleted_lines_result;
 echo;
 printf "%*s\n" $(((${#RESULTB}+$COLUMNS)/2)) "${RESULTB}";
+echo;
+echo;
+# Ask for diffs
+seperator;
+printf "%*s\n" $(((${#DIFF}+$COLUMNS)/2)) "${DIFF}";
+seperator;
+echo;
+echo;
+printf "%b" "If you´d like to have a list of all deleted lines, press ${R}'Y'${N}[ENTER] - To skip it press ${R}'N'${N}[ENTER]: ";
+read what;
+case "$what" in
+    y*|Y*)
+        mkdir ${DIF};
+        echo;
+        diff --side-by-side --suppress-common-lines ${BCK}/en.pl ${LANGS}/en.pl > ${DIF}/en.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/de.pl ${LANGS}/de.pl > ${DIF}/de.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/es.pl ${LANGS}/es.pl > ${DIF}/es.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/fr.pl ${LANGS}/fr.pl > ${DIF}/fr.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/it.pl ${LANGS}/it.pl > ${DIF}/it.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/nl.pl ${LANGS}/nl.pl > ${DIF}/nl.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/pl.pl ${LANGS}/pl.pl > ${DIF}/pl.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/ru.pl ${LANGS}/ru.pl > ${DIF}/ru.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/tr.pl ${LANGS}/tr.pl > ${DIF}/tr.pl.diff;
+        echo;
+        echo -e "${B}You can find the lists under '${DIF}'${N}";
+        echo;
+    ;;
+    n*|N*)
+        echo;
+        echo -e "${B}You want no lists/diffs OK... ${N}";
+        echo;
+    ;;
+esac
 echo;
 echo;
 printf "%*s\n" $(((${#END}+$COLUMNS)/2)) "${END}";
