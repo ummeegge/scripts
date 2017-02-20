@@ -493,15 +493,17 @@ case "$what" in
     y*|Y*)
         mkdir ${DIF};
         echo;
-        diff --side-by-side --suppress-common-lines ${BCK}/en.pl ${LANGS}/en.pl > ${DIF}/en.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/de.pl ${LANGS}/de.pl > ${DIF}/de.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/es.pl ${LANGS}/es.pl > ${DIF}/es.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/fr.pl ${LANGS}/fr.pl > ${DIF}/fr.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/it.pl ${LANGS}/it.pl > ${DIF}/it.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/nl.pl ${LANGS}/nl.pl > ${DIF}/nl.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/pl.pl ${LANGS}/pl.pl > ${DIF}/pl.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/ru.pl ${LANGS}/ru.pl > ${DIF}/ru.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/tr.pl ${LANGS}/tr.pl > ${DIF}/tr.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/acct.en.pl ${LANGS}/acct.en.pl > ${DIF}/acct.en.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/acct.de.pl ${LANGS}/acct.de.pl > ${DIF}/acct.de.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.de.pl ${LANGS}/guardian.de.pl > ${DIF}/guardian.de.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.en.pl ${LANGS}/guardian.en.pl > ${DIF}/guardian.en.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.es.pl ${LANGS}/guardian.es.pl > ${DIF}/guardian.es.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.fr.pl ${LANGS}/guardian.fr.pl > ${DIF}/guardian.fr.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.it.pl ${LANGS}/guardian.it.pl > ${DIF}/guardian.it.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.nl.pl ${LANGS}/guardian.nl.pl > ${DIF}/guardian.nl.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.pl.pl ${LANGS}/guardian.pl.pl > ${DIF}/guardian.pl.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.ru.pl ${LANGS}/guardian.ru.pl > ${DIF}/guardian.ru.pl.diff;
+        diff --side-by-side --suppress-common-lines ${BCK}/guardian.tr.pl ${LANGS}/guardian.tr.pl > ${DIF}/guardian.tr.pl.diff;
         echo;
         echo -e "${B}You can find the lists under '${DIF}'${N}";
         echo;
