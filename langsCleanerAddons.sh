@@ -31,8 +31,9 @@ THEMES="/srv/web/ipfire/html/themes/*/*";
 PAKFIRE="/opt/pakfire/lib";
 BCK="${DIR}/langs_orig_bck";
 DIF="${DIR}/diffs";
-LCB="LineCounter_before";
-LCA="LineCounter_after";
+LCB="${DIR}/LineCounter_before";
+LCA="${DIR}/LineCounter_after";
+LCR="${DIR}/deleted_lines_result";
 
 # Formatting functions
 COLUMNS="$(tput cols)";
@@ -54,8 +55,8 @@ COPY="All languages has been compared and the lost strings has been printed to $
 LANG="The language cache has been updated. From now on, all changes can be overviewed over the WUI. ";
 RESULT="Show you all entries which has not been deleted, please delete them manually or try a better script.";
 RESULTA="All files can be found under ${DIR} if something has been done there.";
-RESULTB="This count of deleted lines can also be found under '${DIR}/deleted_lines_result' if there has been something deleted.";
-RESULTC="Count of all deleted lines per language";
+RESULTB="This count of deleted lines can also be found under '${LCR}' if there has been something deleted.";
+RESULTC="Count of all deleted Addon lines per language";
 DIFF="DIFF section if needed";
 # Seperator functions
 seperator(){ printf -v _hr "%*s" ${COLUMNS} && echo ${_hr// /${1-=}}; }
@@ -70,16 +71,21 @@ seperator;
 echo;
 echo;
 
+cd /tmp || exit 1;
+
 # Add dir if not already presant and change working place
 if [ ! -d "${DIR}" ]; then
     mkdir ${DIR};
 fi
-cd ${DIR};
+
+# Change to work dir
+cd ${DIR} || exit 1;
 
 # Backup of existing files
 cp -R ${LANGS} ${BCK};
+
 # Count lines before processing
-wc -l ${LANGS}/*.pl >> ${DIR}/${LCB};
+wc -l ${LANGS}/*.pl >> ${LCB};
 
 # Status bar
 while true; do echo -n .; sleep 1; done &
@@ -312,7 +318,6 @@ done
 echo -e "${B}Turkish is done${N}";
 echo;
 
-update-lang-cache > /dev/null 2>&1
 echo;
 echo;
 printf "%*s\n" $(((${#LANG}+$COLUMNS)/2)) "${LANG}";
@@ -481,7 +486,7 @@ printf "%*s\n" $(((${#RESULTA}+$COLUMNS)/2)) "${RESULTA}";
 seperator;
 echo;
 echo;
-head -n99999999 ${DIR}/*_rest_entries > /dev/null 2>&1;
+head -n99999999 ${DIR}/*_rest_entries;
 echo;
 echo;
 
@@ -492,10 +497,10 @@ seperator;
 echo;
 echo;
 # Count lines after processing
-wc -l ${LANGS}/*.pl >> ${DIR}/${LCA};
+wc -l ${LANGS}/*.pl >> ${LCA};
 # Processing number of deletion
-paste {$DIR/$LCB,$DIR/$LCA} | awk '{ print $1-$3,"\tLines has been deleted in     "$2 }' > ${DIR}/deleted_lines_result;
-cat ${DIR}/deleted_lines_result;
+paste {$LCB,$LCA} | awk '{ print $1-$3,"\tLines has been deleted in     "$2 }' > ${LCR};
+cat ${LCR};
 echo;
 printf "%*s\n" $(((${#RESULTB}+$COLUMNS)/2)) "${RESULTB}";
 echo;
