@@ -14,7 +14,7 @@
 # Script will compute deleted lines in language files.
 # Diffs after processing will be generated if desired.
 #
-# $Author: ummeegge ; $mail: $Author at web de ; $date: 01.03.2017
+# $Author: ummeegge ; $mail: $Author at web de ; $date: 02.03.2017
 ############################################################################################
 
 # End of line is seperator
@@ -33,6 +33,7 @@ DIF="${DIR}/diffs";
 LCB="${DIR}/LineCounter_before";
 LCA="${DIR}/LineCounter_after";
 LCR="${DIR}/deleted_lines_result";
+LANGUAGES="en de es fr it nl pl ru tr";
 
 # Formatting functions
 COLUMNS="$(tput cols)";
@@ -41,6 +42,7 @@ B=$(tput setaf 6);
 N=$(tput sgr0);
 # Text
 TITEL="Clean up script for dead language file strings - You can easily go for a tankard of coffe now ;-)";
+TITELA="9 languages needs to be processed, so stay tuned... "
 END="That´s it, all work has been done, will go for a beer now. Tschüssle";
 HASSLE="Need to strip the lost ones out... stay tuned ;-) ";
 HASSLEA="Puhh lots of hassle here today :-| ...";
@@ -78,6 +80,7 @@ cp -R langs/ ${BCK}/;
 clear;
 echo;
 printf "%*s\n" $(((${#TITEL}+COLUMNS)/2)) "${TITEL}";
+printf "%*s\n" $(((${#TITELA}+COLUMNS)/2)) "${TITELA}";
 echo;
 seperator;
 echo;
@@ -91,106 +94,17 @@ while true; do echo -n .; sleep 1; done &
 trap 'kill $!' SIGTERM
 
 # Investigate unused entries
-
-for i in $(awk -F"'" '{ print $2 }' langs/en/cgi-bin/en.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/en;
-    fi
+for l in $(echo ${LANGUAGES} | tr ' ' '\n'); do
+    for i in $(awk -F"'" '{ print $2 }' langs/${l}/cgi-bin/${l}.pl); do
+        if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
+            echo "$i" >> ${DIR}/${l};
+        fi
+    done
+    echo -e "${B}${l} has been checked... ${N}";
+    echo;
 done
 
-echo -e "${B}English has been checked... ${N}";
-echo;
-echo -e "${R}8 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/de/cgi-bin/de.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/de;
-    fi
-done
-
-echo -e "${B}German has been checked... ${N}";
-echo;
-echo -e "${R}7 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/es/cgi-bin/es.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/es;
-    fi
-done
-
-echo -e "${B}Spanish has been checked... ${N}";
-echo;
-echo -e "${R}6 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/fr/cgi-bin/fr.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/fr;
-    fi
-done
-
-echo -e "${B}French has been checked... ${N}";
-echo;
-echo -e "${R}5 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/it/cgi-bin/it.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/it;
-    fi
-done
-
-echo -e "${B}Italian has been checked... ${N}";
-echo;
-echo -e "${R}4 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/nl/cgi-bin/nl.pl)
-do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/nl;
-    fi
-done
-
-echo -e "${B}Dutch has been checked... ${N}";
-echo;
-echo -e "${R}3 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/pl/cgi-bin/pl.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/pl;
-    fi
-done
-
-echo -e "${B}Polish has been checked... ${N}";
-echo;
-echo -e "${R}2 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/ru/cgi-bin/ru.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/ru;
-    fi
-done
-
-echo -e "${B}Russian has been checked... ${N}";
-echo;
-echo -e "${R}1 language is left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/tr/cgi-bin/tr.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/tr;
-    fi
-done
-
-echo -e "${B}Turkish has been checked... ${N}";
-echo;
-
-echo;
+# Delete entries in langs dir from investigated lists
 echo;
 seperator;
 printf "%*s\n" $(((${#COPY}+COLUMNS)/2)) "${COPY}";
@@ -199,71 +113,15 @@ printf "%*s\n" $(((${#HASSLEA}+COLUMNS)/2)) "${HASSLEA}";
 seperator;
 echo;
 echo;
-
-# Delete entries in langs dir from investigated lists
-for l in $(cat ${DIR}/en); do
-    sed -i "\#${l}#d" langs/en/cgi-bin/en.pl;
+for l in $(echo ${LANGUAGES} | tr ' ' '\n'); do
+    for i in $(cat ${DIR}/${l}); do
+        sed -i "\#${i}#d" langs/${l}/cgi-bin/${l}.pl;
+    done
+    echo -e "${B}${l} is done... ${N}";
+    echo;
 done
 
-echo -e "${B}English is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/de); do
-    sed -i "\#${l}#d" langs/de/cgi-bin/de.pl;
-done
-
-echo -e "${B}German is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/es); do
-    sed -i "\#${l}#d" langs/es/cgi-bin/es.pl;
-done
-
-echo -e "${B}Spanish is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/fr); do
-    sed -i "\#${l}#d" langs/fr/cgi-bin/fr.pl;
-done
-
-echo -e "${B}French is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/it); do
-    sed -i "\#${l}#d" langs/it/cgi-bin/it.pl;
-done
-
-echo -e "${B}Italian is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/nl); do
-    sed -i "\#${l}#d" langs/nl/cgi-bin/nl.pl;
-done
-
-echo -e "${B}Dutch is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/pl); do
-    sed -i "\#${l}#d" langs/pl/cgi-bin/pl.pl;
-done
-
-echo -e "${B}Polish is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/ru); do
-    sed -i "\#${l}#d" langs/ru/cgi-bin/ru.pl;
-done
-
-echo -e "${B}Russian is done... ${N}";
-echo;
-
-for l in $(cat ${DIR}/tr); do
-    sed -i "\#${l}#d" langs/tr/cgi-bin/tr.pl;
-done
-
-echo -e "${B}Turkish is done${N}";
-echo;
-
+# Check if investigated lines are left
 seperator;
 echo;
 printf "%*s\n" $(((${#ERROR}+COLUMNS)/2)) "${ERROR}";
@@ -273,106 +131,20 @@ printf "%*s\n" $(((${#ERRORC}+COLUMNS)/2)) "${ERRORC}";
 echo;
 seperator;
 echo;
-
-
-for i in $(awk -F"'" '{ print $2 }' langs/de/cgi-bin/de.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/de_rest_entries;
-    fi
+echo;
+for l in $(echo ${LANGUAGES} | tr ' ' '\n'); do
+    for i in $(awk -F"'" '{ print $2 }' langs/${l}/cgi-bin/${l}.pl); do
+        if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
+            echo "$i" >> ${DIR}/${l}_rest_entries;
+        fi
+    done
+    echo -e "${B}${l} has been checked... ${N}";
+    echo;
 done
-
-echo -e "${B}German has been tested... ${N}";
-echo;
-echo -e "${R}8 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/en/cgi-bin/en.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/en_rest_entries;
-    fi
-done
-
-echo -e "${B}English has been tested... ${N}";
-echo;
-echo -e "${R}7 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/es/cgi-bin/es.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/es_rest_entries;
-    fi
-done
-
-echo -e "${B}Spanish has been tested... ${N}";
-echo;
-echo -e "${R}6 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/fr/cgi-bin/fr.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/fr_rest_entries
-    fi
-done
-
-echo -e "${B}French has been tested... ${N}";
-echo;
-echo -e "${R}5 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/it/cgi-bin/it.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/it_rest_entries;
-    fi
-done
-
-echo -e "${B}Italian has been tested... ${N}";
-echo;
-echo -e "${R}4 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/nl/cgi-bin/nl.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/nl_rest_entries;
-    fi
-done
-
-echo -e "${B}Dutch has been tested... ${N}";
-echo;
-echo -e "${R}3 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/pl/cgi-bin/pl.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/pl_rest_entries;
-    fi
-done
-
-echo -e "${B}Polish has been tested... ${N}";
-echo;
-echo -e "${R}2 languages are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/ru/cgi-bin/ru.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/ru_rest_entries;
-    fi
-done
-
-echo -e "${B}Russian has been tested... ${N}";
-echo;
-echo -e "${R}1 language are left${N}";
-echo;
-
-for i in $(awk -F"'" '{ print $2 }' langs/tr/cgi-bin/tr.pl); do
-    if [ -z "$(grep -FR "${i}" ${CGI} ${MENU} ${THEMES} ${PAKFIRE} ${CFG})" ]; then
-        echo "$i" >> ${DIR}/tr_rest_entries;
-    fi
-done
-
-echo "${B}Turkish has been tested${N}";
-
+# Kill status bar process
 kill $!
 
+# Check if invested strings are deleted, otherwise they will be displayed
 echo;
 echo;
 seperator;
@@ -385,10 +157,11 @@ if test -n "$(find "${DIR}" -name '*rest_entries')"; then
     head -n99999999 ${DIR}/*_rest_entries;
 else
     echo -e "${B}All located strings has been deleted... ${N}";
+fi
 echo;
 echo;
 
-# Numbers of deletion
+# Count and compare number of deleted string lines
 seperator;
 printf "%*s\n" $(((${#RESULTC}+COLUMNS)/2)) "${RESULTC}";
 seperator;
@@ -403,6 +176,7 @@ echo;
 printf "%*s\n" $(((${#RESULTB}+COLUMNS)/2)) "${RESULTB}";
 echo;
 echo;
+
 # Ask for diffs
 seperator;
 printf "%*s\n" $(((${#DIFF}+COLUMNS)/2)) "${DIFF}";
@@ -415,15 +189,9 @@ case "$what" in
     y*|Y*)
         mkdir ${DIF};
         echo;
-        diff --side-by-side --suppress-common-lines ${BCK}/en/cgi-bin/en.pl langs/en/cgi-bin/en.pl > ${DIF}/en.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/de/cgi-bin/de.pl langs/de/cgi-bin/de.pl > ${DIF}/de.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/es/cgi-bin/es.pl langs/es/cgi-bin/es.pl > ${DIF}/es.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/fr/cgi-bin/fr.pl langs/fr/cgi-bin/fr.pl > ${DIF}/fr.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/it/cgi-bin/it.pl langs/it/cgi-bin/it.pl > ${DIF}/it.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/nl/cgi-bin/nl.pl langs/nl/cgi-bin/nl.pl > ${DIF}/nl.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/pl/cgi-bin/pl.pl langs/pl/cgi-bin/pl.pl > ${DIF}/pl.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/ru/cgi-bin/ru.pl langs/ru/cgi-bin/ru.pl > ${DIF}/ru.pl.diff;
-        diff --side-by-side --suppress-common-lines ${BCK}/tr/cgi-bin/tr.pl langs/tr/cgi-bin/tr.pl > ${DIF}/tr.pl.diff;
+        for l in $(echo ${LANGUAGES} | tr ' ' '\n'); do
+            diff --side-by-side --suppress-common-lines ${BCK}/${l}/cgi-bin/${l}.pl langs/${l}/cgi-bin/${l}.pl > ${DIF}/${l}.pl.diff;
+        done
         echo;
         echo -e "${B}You can find the lists under '${DIF}'${N}";
         echo;
