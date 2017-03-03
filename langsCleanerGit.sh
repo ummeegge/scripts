@@ -2,17 +2,14 @@
 
 #
 # Script searches all IPFire language files for appropriate entries in
-# /srv/web/ipfire/cgi-bin and it´s subdirectories , under /var/ipfire/menu.d/ ,
-# under /opt/pakfire/lib , /srv/web/html/themes/*/* and under /var/ipfire all *.pl files .
+# IPFires Git environment.
 # If no entries has been found, it will echo it to files for each language which
 # will be used to delete them from the respective language file.
 # A check will processed which checks for missing deletions.
-# All files can be found under /tmp .
-# The script operates in working environment but it should be managable to
-# generate all diffs by copying the new files to the building env which should
-# then delivers applicable diffs.
-# Script will compute deleted lines in language files.
-# Diffs after processing will be generated if desired.
+# A work directory will be created where all files can be found.
+# Script needs to be executed under ipfire-2.x .
+# Script will compute deleted lines in language files and
+# it delivers diffs after processing from old to new files if desired.
 #
 # $Author: ummeegge ; $mail: $Author at web de ; $date: 02.03.2017
 ############################################################################################
