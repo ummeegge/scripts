@@ -18,7 +18,7 @@
 IFS=$'\n'
 
 # Locations
-WORKDIR="workdir_langs"
+WORKDIR="/tmp/workdir_langs"
 DIR="${WORKDIR}/langs_strings_not_found";
 CGI="html/cgi-bin/*"
 MENU="config/menu/*";
@@ -56,13 +56,19 @@ DIFF="DIFF section if needed";
 # Seperator functions
 seperator(){ printf -v _hr "%*s" ${COLUMNS} && echo ${_hr// /${1-=}}; }
 
+# Check if /tmp is presant
+if [ ! -d /tmp ]; then
+    echo "Could NOT find /tmp. Need to quit";
+    exit 1;
+fi
+
 # Check for correct working dir
 if [ ! -d ../ipfire-2.x/ ]; then
     echo "Script can only be started from IPFire Source base directory 'ipfire-2.x'. Need to quit";
     exit 1;
 fi
 
-# Add dir if not already presant and change working place
+# Add dir if not already presant
 if [ -d "${DIR}" ]; then
     rm -rvf ${DIR};
 fi
