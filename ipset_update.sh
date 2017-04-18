@@ -151,12 +151,11 @@ wget -S -N -t 3 -T 10 -o "${DWNLOG}" ${URLS} --no-check-certificate;
 ############################################ Get all IPs ########################################################
 # grep IPs and sort and make them uniq
 cat * | \
-grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sort -nu > ${IPLIST};
+grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | sed -e '/\.0/d' -e '/^0.*/d' | sort -nu > ${IPLIST};
 ########################################### Get all CIDRs #######################################################
 # grep CIDRs and sort and make them uniq
 cat * | \
-grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}/[0-9]{1,2}" | \
-sort -nu > ${CIDRLIST}
+grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}/[0-9]{1,2}" | sort -nu > ${CIDRLIST}
 #################################################################################################################
 # Clean up and sort LAN, WLAN, DNS and OpenVPN addresses out
 sed -i -e 's/^M//g' -e '/#/d' -e '/0.0.0.0.*/d' ${CIDRLIST} ${IPLIST};
