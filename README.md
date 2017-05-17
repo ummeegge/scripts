@@ -39,3 +39,12 @@ This repo contains currently:
 	- Guardian logs if activated and not empty
 	- syslog entries of tha last 50 lines.
 
+- langs-Cleaner(-addons)
+
+	- Scripts searches all IPFire language files for appropriate entries in IPFires Git environment.
+	- If no entries has been found, it will echo it to files for each language which will be used to delete them from the respective language file.
+	- A check will processed which checks for missing deletions.
+	(-addons)
+	- Searches also for strings in the IPFire addons and will do pretty much the same then the script above.
+
+
