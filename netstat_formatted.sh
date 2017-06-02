@@ -16,7 +16,7 @@ PROFILE="/var/ipfire/fireinfo/profile"
 # SSH, Guardian and ovpn variablen
 ACCEPT="$(awk '/sshd/ && /Accepted/' ${MESSAGES})";
 DENY="$(awk '/sshd/ && /Failed/' ${MESSAGES})";
-GUARDLOG="$(tail -50 ${GUARDIAN})";
+
 # Date and host infos
 DATE="$(date)";
 MACHINE="$(hostname)";
@@ -56,16 +56,16 @@ seperatorA;
 echo;
 seperatorB;
 echo;
-printf "%*s\n" $(((${#TITEL}+$COLUMNS)/2)) "${TITEL}";
+printf "%*s\n" $(((${#TITEL}+COLUMNS)/2)) "${TITEL}";
 echo;
-printf "%*s\n" $(((${#STATS}+$COLUMNS)/2)) "${STATS}";
+printf "%*s\n" $(((${#STATS}+COLUMNS)/2)) "${STATS}";
 seperatorC;
 echo;
 echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#UPTIME}+$COLUMNS)/2)) "${UPTIME}";
+printf "%*s\n" $(((${#UPTIME}+COLUMNS)/2)) "${UPTIME}";
 seperatorC;
 echo;
 uptime;
@@ -74,7 +74,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#DISK}+$COLUMNS)/2)) "${DISK}";
+printf "%*s\n" $(((${#DISK}+COLUMNS)/2)) "${DISK}";
 seperatorC;
 echo;
 df -h;
@@ -83,7 +83,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#SMART}+$COLUMNS)/2)) "${SMART}";
+printf "%*s\n" $(((${#SMART}+COLUMNS)/2)) "${SMART}";
 seperatorC;
 echo;
 smartctl -A /dev/sda;
@@ -92,7 +92,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#RAM}+$COLUMNS)/2)) "${RAM}";
+printf "%*s\n" $(((${#RAM}+COLUMNS)/2)) "${RAM}";
 seperatorC;
 echo;
 free;
@@ -101,7 +101,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#LOGON}+$COLUMNS)/2)) "${LOGON}";
+printf "%*s\n" $(((${#LOGON}+COLUMNS)/2)) "${LOGON}";
 seperatorC;
 echo;
 w;
@@ -110,7 +110,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#TOPTENRAM}+$COLUMNS)/2)) "${TOPTENRAM}";
+printf "%*s\n" $(((${#TOPTENRAM}+COLUMNS)/2)) "${TOPTENRAM}";
 seperatorC;
 echo;
 ps auxf | sort -r -k 4 | head -10;
@@ -119,7 +119,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#TOPTENCPU}+$COLUMNS)/2)) "${TOPTENCPU}";
+printf "%*s\n" $(((${#TOPTENCPU}+COLUMNS)/2)) "${TOPTENCPU}";
 seperatorC;
 echo;
 ps auxf | sort -r -k 4 | head -10;
@@ -128,7 +128,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#IOSTAT}+$COLUMNS)/2)) "${IOSTAT}";
+printf "%*s\n" $(((${#IOSTAT}+COLUMNS)/2)) "${IOSTAT}";
 seperatorC;
 echo;
 iostat;
@@ -137,7 +137,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#NSTAT}+$COLUMNS)/2)) "${NSTAT}";
+printf "%*s\n" $(((${#NSTAT}+COLUMNS)/2)) "${NSTAT}";
 seperatorC;
 echo;
 netstat -tulpn;
@@ -146,7 +146,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#NSTATCONPORTS}+$COLUMNS)/2)) "${NSTATCONPORTS}";
+printf "%*s\n" $(((${#NSTATCONPORTS}+COLUMNS)/2)) "${NSTATCONPORTS}";
 seperatorC;
 echo;
 netstat -antpuew;
@@ -155,16 +155,16 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#LSOFAGAIN}+$COLUMNS)/2)) "${LSOFAGAIN}";
+printf "%*s\n" $(((${#LSOFAGAIN}+COLUMNS)/2)) "${LSOFAGAIN}";
 seperatorC;
 echo;
-lsof -i -n | egrep 'COMMAND|LISTEN';
+lsof -i -n | grep -E 'COMMAND|LISTEN';
 echo;
 echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#SSAGAIN}+$COLUMNS)/2)) "${SSAGAIN}";
+printf "%*s\n" $(((${#SSAGAIN}+COLUMNS)/2)) "${SSAGAIN}";
 seperatorC;
 echo;
 ss -u -a;
@@ -174,27 +174,29 @@ echo;
 if [ -n "$(pgrep openvpn)" ]; then
 	seperatorB;
 	echo;
-	printf "%*s\n" $(((${#OVPNIFACE}+$COLUMNS)/2)) "${OVPNIFACE}";
+	printf "%*s\n" $(((${#OVPNIFACE}+COLUMNS)/2)) "${OVPNIFACE}";
 	seperatorC;
 	echo;
 	netstat -r | grep tun;
 	echo;
 	echo;
 
-	seperatorB;
-	echo;
-	printf "%*s\n" $(((${#OVPNCLIENT}+$COLUMNS)/2)) "${OVPNCLIENT}";
-	seperatorC;
-	echo;
-	cat ${OVPN};
-	echo;
-	echo;
+	if [ -s "${OVPN}" ]; then
+		seperatorB;
+		echo;
+		printf "%*s\n" $(((${#OVPNCLIENT}+COLUMNS)/2)) "${OVPNCLIENT}";
+		seperatorC;
+		echo;
+		cat ${OVPN};
+		echo;
+		echo;
+	fi
 fi
 
 if [ -n "$(pgrep sshd)" ]; then
 	seperatorB;
 	echo;
-	printf "%*s\n" $(((${#SSHCHECK}+$COLUMNS)/2)) "${SSHCHECK}";
+	printf "%*s\n" $(((${#SSHCHECK}+COLUMNS)/2)) "${SSHCHECK}";
 	seperatorC;
 	echo;
 	# accepted SSH Logins
@@ -221,7 +223,7 @@ fi
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#DDOS}+$COLUMNS)/2)) "${DDOS}";
+printf "%*s\n" $(((${#DDOS}+COLUMNS)/2)) "${DDOS}";
 seperatorC;
 echo;
 echo "Check ESTABLISHED connections and connections count"
@@ -232,27 +234,27 @@ netstat -ntu | awk '{print $5}' | tail -n +3 | cut -d: -f1 | sort | uniq -c | so
 echo;
 echo;
 
-if [ -n $(pgrep guardian) ]; then
+if [ -n "$(pgrep guardian)" ]; then
 	seperatorB;
 	echo;
-	printf "%*s\n" $(((${#GUARDIANLOG}+$COLUMNS)/2)) "${GUARDIANLOG}";
+	printf "%*s\n" $(((${#GUARDIANLOG}+COLUMNS)/2)) "${GUARDIANLOG}";
 	seperatorC;
 	echo;
 	# Guardian logs
-	if [ -n ${GUARDIAN} ]; then
+	if [ -n "${GUARDIAN}" ]; then
 		echo;
 		echo "Guardian got the following IP entries."
 		echo;
 		tail -50 ${GUARDIAN};
 		echo;
 	else
-		echo "Guardian have no entries."
+		echo "There are no entries in Guardian log."
 	fi
 fi
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#LOG}+$COLUMNS)/2)) "${LOG}";
+printf "%*s\n" $(((${#LOG}+COLUMNS)/2)) "${LOG}";
 seperatorC;
 echo;
 tail -50 ${MESSAGES};
@@ -261,7 +263,7 @@ echo;
 
 seperatorB;
 echo;
-printf "%*s\n" $(((${#STATS}+$COLUMNS)/2)) "${STATS}";
+printf "%*s\n" $(((${#STATS}+COLUMNS)/2)) "${STATS}";
 seperatorB;
 echo;
 seperatorA;
