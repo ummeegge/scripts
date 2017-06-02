@@ -47,4 +47,12 @@ This repo contains currently:
 	(-addons)
 	- Searches also for strings in the IPFire addons and will do pretty much the same then the script above.
 
+- 'company_blocker.sh' blocks companies via IPTables
 
+	- Modfied version from an IPFire project --> https://forum.ipfire.org/viewtopic.php?f=6&t=18542. Thanks to Shellshock for his ideas.
+	- This script uses ASNs to block companies.
+	- User needs to edit the company name only to block it via IPFire firewall.local.
+	- IPset will be used to create also vast lists of CIDRs.
+	- Script uses only CIDRs no IPs.
+	- Uninstaller is included.
+	- Menu point to display all blocked sets are integrated
