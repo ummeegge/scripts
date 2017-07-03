@@ -289,7 +289,7 @@ do
 				delete_function;
 				echo "Uninstallation is done, thanks for testing... Goodbye.";
 				sleep 2;
-				kill $(pgrep nfsen) && kill $(pgrep nfcapd);
+				kill $(pgrep nfsen);
 			else
 				echo "Nfsen is NOT installed on this system... ";
 				sleep 2;
@@ -315,18 +315,25 @@ do
 
 		s*|S*)
 			if [ -e "${INIT}/nfsen" ]; then
-				echo "Will start Nfsen and the netflow tools... ";
-				/etc/init.d/nfsen start 2>/dev/null;
-				/etc/init.d/fprobe start 2>/dev/null;
-				echo;
-				seperator;
-				ps aux | grep -v grep | grep fprobe;
-				echo;
-				ps aux | grep -v grep | grep nfsen;
-				echo;
-				seperator;
-				echo;
-				read -p "To return to the menu press [ENTER]";
+				if ! pgrep fprobe > /dev/null; then
+					echo "Will start Nfsen and the netflow tools... ";
+					/etc/init.d/nfsen start 2>/dev/null;
+					/etc/init.d/fprobe start 2>/dev/null;
+					echo;
+					seperator;
+					ps aux | grep -v grep | grep fprobe;
+					echo;
+					ps aux | grep -v grep | grep nfsen;
+					echo;
+					seperator;
+					echo;
+					read -p "To return to the menu press [ENTER]";
+				else
+					echo;
+					echo "Nfsen is already running... ";
+					echo;
+					sleep 2;
+				fi
 			else
 				echo "No installation detected... ";
 				sleep 2;
@@ -338,17 +345,24 @@ do
 				echo "No installation detected... ";
 				sleep 2;
 			else
-				echo "Will stop Nfsen and the netflow tools... ";
-				/etc/init.d/nfsen stop 2>/dev/null;
-				/etc/init.d/fprobe stop 2>/dev/null;
-				echo;
-				seperator;
-				ps aux | grep -v grep | grep fprobe;
-				echo;
-				ps aux | grep -v grep | grep nfsen;
-				seperator;
-				echo;
-				read -p "To return to the menu press [ENTER]";
+				if pgrep fprobe > /dev/null; then
+					echo "Will stop Nfsen and the netflow tools... ";
+					/etc/init.d/nfsen stop 2>/dev/null;
+					/etc/init.d/fprobe stop 2>/dev/null;
+					echo;
+					seperator;
+					ps aux | grep -v grep | grep fprobe;
+					echo;
+					ps aux | grep -v grep | grep nfsen;
+					seperator;
+					echo;
+					read -p "To return to the menu press [ENTER]";
+				else
+					echo;
+					echo "Nfesn is already stopped";
+					echo;
+					sleep 2;
+				fi
 			fi
 		;;
 
