@@ -317,8 +317,8 @@ do
 			if [ -e "${INIT}/nfsen" ]; then
 				if ! pgrep fprobe > /dev/null; then
 					echo "Will start Nfsen and the netflow tools... ";
-					/etc/init.d/nfsen start 2>/dev/null;
 					/etc/init.d/fprobe start 2>/dev/null;
+					/etc/init.d/nfsen start 2>/dev/null;
 					echo;
 					seperator;
 					ps aux | grep -v grep | grep fprobe;
