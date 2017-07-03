@@ -56,3 +56,17 @@ This repo contains currently:
 	- Script uses only CIDRs no IPs.
 	- Uninstaller is included.
 	- Menu point to display all blocked sets are integrated
+
+- 'nfsen-installer.sh' is a in- and uninstaller for Nfsen, Nfdump and fprobe for IPFire 32 and 64 bit systems which includes
+
+	Initscript and Vhost for NFsen will be installed too incl. symlinks.
+	- Nfsen installation takes place under /var/nfsen.
+	- Nfsen listens per default on port 54321 TCP.
+	- Installer will include green subnet for Allow from access.
+	- Nfsen listens only on green0 interface.
+	- Nfsen initscript checks for fprobes port and adjusts it if needed.
+	fprobe will send to localhost via port 65432 all probes.
+	- fprobe chroots to /var/empty.
+	- fprobe uses no promiscuous mode.
+	- fprobe grabs 'any' interfaces.
+	- fprobe configuration can be made over /etc/rc.d/init.d/fprobe.
