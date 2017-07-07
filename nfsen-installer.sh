@@ -8,27 +8,34 @@
 # 	- Installer will include green subnet for Allow from access.
 #	- Nfsen listens only on green0 interface.
 #	- Nfsen initscript checks for fprobes port and adjusts it if needed.
+# Installer gives a choice between softflowd and fprobe as network traffic analyzer:
+# softflowd will send per default to localhost via 65432 all probes.
+#	- softflowd was compiled with enabled chroot to /var/empty.
+#	- softflowd grabs 'any' interfaces.
+#	- Reduces permissions to nobody.
+# 	- softflowd configuration can be done over /etc/rc.d/init.d/softflowd.
 # fprobe will send to localhost via port 65432 all probes.
 #	- fprobe chroots to /var/empty.
 #	- fprobe uses no promiscuous mode.
 #	- fprobe grabs 'any' interfaces.
 #	- fprobe configuration can be made over /etc/rc.d/init.d/fprobe.
 #
-# $author: ummeegge web de ; $date: 03.07.2017
-############################################################################
+# $author: ummeegge web de ; $date: 07.07.2017
+######################################################################################
 #
 
 # Download address
-URL="http://people.ipfire.org/~ummeegge/Netflow/nfdump-fprob-nfsen/";
-PACKAGEA="nfsen_package-32bit.tar.gz";
-PACKAGEB="nfsen_package-64bit.tar.gz";
-SUMA="7c089df6512d9fad867d81cea06e54f18bea4efdc215069ee415fdca5b7341a4";
-SUMB="f11c9708aa415abbb57c1f338bbd1cd737a7253845c525717970bed1730b2f5b";
+URL="http://people.ipfire.org/~ummeegge/Netflow/nfdump-fprob-nfsen/v2";
+PACKAGEA="nfsen_package-32bit-v2.tar.gz";
+PACKAGEB="nfsen_package-64bit-v2.tar.gz";
+SUMA="95821e293d2f33724f62ff5a5ead98cc5b26d41b17795fbf4cb33412354d539b";
+SUMB="747124bdbb32a5df9cb11be636ce60c0e92d6e5be5666fd69bd598d0a8323c4b";
 ## Packages
 FP="fprobe-1.1-*bit-1.ipfire";
 ND="nfdump-1.6.13-*bit-1.ipfire";
 NS="nfsen-1.3.8_ipfire-patched.tar.gz";
 PS="perl-Socket6-0.19-*bit-1.ipfire";
+SF="softflowd-0.9.9-*-1.ipfire";
 # Directories
 INIT="/etc/rc.d/init.d";
 INSTDIR="/opt/pakfire/tmp";
@@ -52,6 +59,7 @@ seperator(){ printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -; };
 # Text
 WELCOME="-- Welcome to Nfsen on IPFire installation --";
 WELCOME1="- This script includes an in- and unstaller of Nfsen, Nfdump and Fprobe -";
+STATEREPORT="- Process status of Nfsen installation -"
 
 # Check for symlinks for Nfsen initscript
 symlinkadd_function() {
@@ -174,6 +182,12 @@ install_function() {
 	tar xvf ${FP};
 	./install.sh;
 	cd /tmp;
+	# Softflowd
+	cp -v ${SF} ${INSTDIR};
+	cd ${INSTDIR};
+	tar xvf ${SF};
+	./install.sh;
+	cd /tmp;
 	# Nfdump
 	cp -v ${ND} ${INSTDIR};
 	cd ${INSTDIR};
@@ -194,9 +208,10 @@ install_function() {
 	# Add Meta files
 	touch /opt/pakfire/db/installed/meta-fprobe;
 	touch /opt/pakfire/db/installed/meta-nfsen;
+	touch /opt/pakfire/db/installed/meta-softflowd;
 	# CleanUP
 	echo "Clean up /tmp";
-	rm -rf /opt/pakfire/tmp/* /tmp/${FP} /tmp/${ND} /tmp/${NS} /tmp/${PS} /tmp/nfsen-init.sh /tmp/nfsen-vhost.conf /tmp/nfsen-1.3.8/;
+	rm -rf /opt/pakfire/tmp/* /tmp/${FP} /tmp/${ND} /tmp/${NS} /tmp/${PS} /tmp/${SF} /tmp/nfsen-init.sh /tmp/nfsen-vhost.conf /tmp/nfsen-1.3.8/;
 }
 
 delete_function() {
@@ -204,6 +219,10 @@ delete_function() {
 	/etc/rc.d/init.d/fprobe \
 	/usr/sbin/fprobe \
 	/opt/pakfire/db/installed/meta-fprobe \
+	/etc/rc.d/init.d/softflowd \
+	/usr/sbin/softflowctl \
+	/usr/sbin/softflowd \
+	/opt/pakfire/db/installed/meta-softflowd \
 	/opt/pakfire/db/installed/meta-nfsen \
 	/usr/bin/ft2nfdump \
 	/usr/bin/nfanon \
@@ -259,7 +278,36 @@ do
 			if [ ! -e /srv/web/nfsen ]; then
 				download_function;
 				install_function;
-				/etc/init.d/fprobe start 2>/dev/null;
+				printf "%b" "${B}${b}Which flow collector would you like to use? To use fprobe type '${R}${b}f-ENTER${N}' - ${B}${b}To use softflowd type '${R}${b}s -ENTER${N}'\n";
+				read what;
+				case $what in
+					f*|F*)
+						echo;
+						echo "OK will use fprobe... ";
+						echo;
+						/etc/init.d/softflowd stop 2>/dev/null;
+						rm -rf /etc/init.d/softflowd /usr/sbin/softflowctl /usr/sbin/softflowd;
+						/etc/init.d/fprobe start 2>/dev/null;
+					;;
+
+					s*|S*)
+						echo;
+						echo "OK will use softflowd... ";
+						echo;
+						rm -rf /etc/init.d/fprobe /usr/sbin/fprobe;
+						/etc/init.d/softflowd start 2>/dev/null;
+					;;
+
+					*)
+						echo;
+						echo "This option does not exist, will activate neverthless softflowd then... ";
+						/etc/init.d/fprobe stop 2>/dev/null;
+						rm -rf /etc/init.d/fprobe /usr/sbin/fprobe;
+						/etc/init.d/softflowd start 2>/dev/null;
+						echo;
+					;;
+
+				esac
 				/etc/init.d/nfsen start 2>/dev/null;
 				echo "Installation is done, happy testing....";
 				echo;
@@ -270,7 +318,7 @@ do
 				seperator;
 				echo;
 				echo "${b}Please be patient and wait some minutes that some data can be collected.${N}"
-				echo "${b}Fprobe collects data from 'any' interfaces, to change this checkout ${INIT}/fprobe${N} ."
+				echo "${b}The flow collector collects data from 'any' interfaces, to change this checkout the appropriate script under ${INIT}${N} ."
 				echo;
 				read -p "To go back to the menu press [ENTER]";
 			else
@@ -282,25 +330,39 @@ do
 		u*|U*)
 			if [ -e /srv/web/nfsen ]; then
 				/etc/init.d/nfsen stop 2>/dev/null;
-				/etc/init.d/fprobe stop 2>/dev/null;
+				if pgrep fprobe > /dev/null; then
+					/etc/init.d/fprobe stop 2>/dev/null;
+				fi
+				if pgrep softflowd > /dev/null; then
+					/etc/init.d/softflowd stop 2>/dev/null;
+				fi
 				#/var/nfsen/bin/nfsen stop;
 				sleep 2;
 				symlinkdel_function;
 				delete_function;
+				echo;
 				echo "Uninstallation is done, thanks for testing... Goodbye.";
 				sleep 2;
 				kill $(pgrep nfsen);
 			else
+				echo;
 				echo "Nfsen is NOT installed on this system... ";
 				sleep 2;
 			fi
 		;;
 
 		p*|P*)
+			echo
+			printf "%*s\n" $(((${#STATEREPORT}+COLUMNS)/2)) "${STATEREPORT}";
 			if [ -e "${INIT}/nfsen" ]; then
 				echo;
 				seperator;
-				ps aux | grep -v grep | grep fprobe;
+				if pgrep fprobe > /dev/null; then
+					ps aux | grep -v grep | grep fprobe;
+				fi
+				if pgrep softflowd > /dev/null; then
+					ps aux | grep -v grep | grep softflowd;
+				fi
 				echo;
 				ps aux | grep -v grep | grep nfsen;
 				echo;
@@ -314,55 +376,101 @@ do
 		;;
 
 		s*|S*)
-			if [ -e "${INIT}/nfsen" ]; then
-				if ! pgrep fprobe > /dev/null; then
-					echo "Will start Nfsen and the netflow tools... ";
-					/etc/init.d/fprobe start 2>/dev/null;
-					/etc/init.d/nfsen start 2>/dev/null;
-					echo;
-					seperator;
-					ps aux | grep -v grep | grep fprobe;
-					echo;
-					ps aux | grep -v grep | grep nfsen;
-					echo;
-					seperator;
-					echo;
-					read -p "To return to the menu press [ENTER]";
-				else
-					echo;
-					echo "Nfsen is already running... ";
-					echo;
-					sleep 2;
-				fi
-			else
-				echo "No installation detected... ";
-				sleep 2;
-			fi
-		;;
-
-		k*|K*)
 			if [ ! -e "${INIT}/nfsen" ]; then
 				echo "No installation detected... ";
 				sleep 2;
 			else
-				if pgrep fprobe > /dev/null; then
-					echo "Will stop Nfsen and the netflow tools... ";
-					/etc/init.d/nfsen stop 2>/dev/null;
-					/etc/init.d/fprobe stop 2>/dev/null;
-					echo;
-					seperator;
-					ps aux | grep -v grep | grep fprobe;
-					echo;
-					ps aux | grep -v grep | grep nfsen;
-					seperator;
-					echo;
-					read -p "To return to the menu press [ENTER]";
+				if ! pgrep nfsen > /dev/null; then
+					if [ -e "${INIT}/fprobe" ]; then
+						if ! pgrep fprobe > /dev/null; then
+							echo "Will start Nfsen and the netflow tools... ";
+							/etc/init.d/fprobe start 2>/dev/null;
+							/etc/init.d/nfsen start 2>/dev/null;
+							echo;
+							seperator;
+							ps aux | grep -v grep | grep fprobe;
+							echo;
+							ps aux | grep -v grep | grep nfsen;
+							seperator;
+							echo;
+							read -p "To return to the menu press [ENTER]";
+						else
+							echo;
+							echo "Process is already started";
+							echo;
+							sleep 2;
+						fi
+					else
+						if [ -e "${INIT}/softflowd" ]; then
+							if ! pgrep softflowd > /dev/null; then
+								echo "Will start Nfsen and the netflow tools... ";
+								/etc/init.d/softflowd start 2>/dev/null;
+								/etc/init.d/nfsen start 2>/dev/null;
+								echo;
+								printf "%*s\n" $(((${#STATEREPORT}+COLUMNS)/2)) "${STATEREPORT}";
+								seperator;
+								ps aux | grep -v grep | grep softflowd;
+								echo;
+								ps aux | grep -v grep | grep nfsen;
+								seperator;
+								echo;
+								read -p "To return to the menu press [ENTER]";
+							else
+								echo;
+								echo "Process is already started... ";
+								echo;
+								sleep 2;
+							fi
+						fi
+					fi
 				else
 					echo;
-					echo "Nfesn is already stopped";
+					echo "Nfsen is already running";
 					echo;
 					sleep 2;
 				fi
+			fi
+		;;
+
+		k*|K*)
+			if [ -e "${INIT}/nfsen" ]; then
+				if pgrep nfsen > /dev/null; then
+					if pgrep fprobe > /dev/null; then
+						echo "Will stop Nfsen and the netflow tools... ";
+						/etc/init.d/nfsen stop 2>/dev/null;
+						/etc/init.d/fprobe stop 2>/dev/null;
+						echo;
+						seperator;
+						ps aux | grep -v grep | grep fprobe;
+						echo;
+						ps aux | grep -v grep | grep nfsen;
+						seperator;
+						echo;
+						read -p "To return to the menu press [ENTER]";
+					fi
+					if pgrep softflowd > /dev/null; then
+						echo "Will stop Nfsen and the netflow tools... ";
+						/etc/init.d/nfsen stop 2>/dev/null;
+						/etc/init.d/softflowd stop 2>/dev/null;
+						echo;
+						printf "%*s\n" $(((${#STATEREPORT}+COLUMNS)/2)) "${STATEREPORT}";
+						seperator;
+						ps aux | grep -v grep | grep softflowd;
+						echo;
+						ps aux | grep -v grep | grep nfsen;
+						seperator;
+						echo;
+						read -p "To return to the menu press [ENTER]";
+					fi
+				else
+					echo;
+					echo "Nfsen is already stopped";
+					echo;
+					sleep 2;
+				fi
+			else
+				echo "No installation detected... ";
+				sleep 2;
 			fi
 		;;
 
