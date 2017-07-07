@@ -7,7 +7,6 @@
 # 	- Nfsen listens per default on port 54321 TCP.
 # 	- Installer will include green subnet for Allow from access.
 #	- Nfsen listens only on green0 interface.
-#	- Nfsen initscript checks for fprobes port and adjusts it if needed.
 # Installer gives a choice between softflowd and fprobe as network traffic analyzer:
 # softflowd will send per default to localhost via 65432 all probes.
 #	- softflowd was compiled with enabled chroot to /var/empty.
@@ -78,16 +77,22 @@ symlinkadd_function() {
 	ln -s ../init.d/${BIN} /etc/rc.d/rc6.d/K${REBOOT}${BIN};
 }
 
+# Fprobe, softflowd and Nfsen symlink deletion function
 symlinkdel_function(){
 	# Nfsen 
 	ls /etc/rc.d/rc?.d | grep 'nfsen' > /dev/null 2>&1
 	if [ "$?" = "0" ]; then
-		rm -rfv /etc/rc.d/rc?.d/*nfsen*;
+		rm -rfv /etc/rc.d/rc?.d/*nfsen;
 	fi
 	# Fprobe
 	ls /etc/rc.d/rc?.d | grep 'fprobe' > /dev/null 2>&1
 	if [ "$?" = "0" ]; then
-		rm -rfv /etc/rc.d/rc?.d/*fprobe*;
+		rm -rfv /etc/rc.d/rc?.d/*fprobe;
+	fi
+	# softflowd
+	ls /etc/rc.d/rc?.d | grep 'softflowd' > /dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		rm -rfv /etc/rc.d/rc?.d/*softflowd;
 	fi
 }
 
@@ -116,7 +121,7 @@ download_function() {
 			echo -e "SHA2 sum is        ${R}${b}${CHECK}${N} and is not correct… ";
 			echo;
 			echo -e "\033[1;31mShit happens :-( the SHA2 sum is incorrect, please report this here\033[0m";
-			echo "--> https://forum.ipfire.org/viewtopic.php?f=4&t=4924";
+			echo "--> https://forum.ipfire.org/viewtopic.php?f=50&t=19022";
 			echo;
 			exit 1;
 		fi
@@ -146,7 +151,7 @@ download_function() {
 			echo -e "SHA2 sum is        ${R}${b}${CHECK}${N} and is not correct… ";
 			echo;
 			echo -e "\033[1;31mShit happens :-( the SHA2 sum is incorrect, please report this here\033[0m";
-			echo "--> https://forum.ipfire.org/viewtopic.php?f=4&t=4924";
+			echo "--> https://forum.ipfire.org/viewtopic.php?f=50&t=19022";
 			echo;
 			exit 1;
 		fi
@@ -300,7 +305,7 @@ do
 
 					*)
 						echo;
-						echo "This option does not exist, will activate neverthless softflowd then... ";
+						echo "This option does not exist. Since we need one analyzer will activate neverthless softflowd then... ";
 						/etc/init.d/fprobe stop 2>/dev/null;
 						rm -rf /etc/init.d/fprobe /usr/sbin/fprobe;
 						/etc/init.d/softflowd start 2>/dev/null;
