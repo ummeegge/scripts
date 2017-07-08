@@ -27,8 +27,8 @@
 URL="http://people.ipfire.org/~ummeegge/Netflow/nfdump-fprob-nfsen/v2";
 PACKAGEA="nfsen_package-32bit-v2.tar.gz";
 PACKAGEB="nfsen_package-64bit-v2.tar.gz";
-SUMA="95821e293d2f33724f62ff5a5ead98cc5b26d41b17795fbf4cb33412354d539b";
-SUMB="747124bdbb32a5df9cb11be636ce60c0e92d6e5be5666fd69bd598d0a8323c4b";
+SUMA="512390a62b52eb6e0089b5e12866b9bf09bba7aa91d957cf0c40c704607721bc";
+SUMB="04fa7a8098a8983f47c281b57e1be2e27a769327db19c27731104fb39913b52a";
 ## Packages
 FP="fprobe-1.1-*bit-1.ipfire";
 ND="nfdump-1.6.13-*bit-1.ipfire";
@@ -65,7 +65,7 @@ symlinkadd_function() {
 	BIN="nfsen";
 	# Possible runlevel ranges
 	SO="[7-9][0-9]";
-	SA="[3-6][0-9]";
+	SA="[3-5][0-9]";
 	RE="[7-9][0-9]";
 	# Search free runlevel
 	STOP=$(ls /etc/rc.d/rc0.d/ | sed -e 's/[^0-9]//g' | awk '$1!=p+1{print p+1" "$1-1}{p=$1}' | sed -e '1d' | tr ' ' '\n' | grep -E "${SO}" | head -1);
@@ -293,6 +293,7 @@ do
 						/etc/init.d/softflowd stop 2>/dev/null;
 						rm -rf /etc/init.d/softflowd /usr/sbin/softflowctl /usr/sbin/softflowd;
 						/etc/init.d/fprobe start 2>/dev/null;
+						rm -rf /etc/rc.d/rc?.d/*softflowd;
 					;;
 
 					s*|S*)
@@ -301,6 +302,8 @@ do
 						echo;
 						rm -rf /etc/init.d/fprobe /usr/sbin/fprobe;
 						/etc/init.d/softflowd start 2>/dev/null;
+						rm -rf /etc/rc.d/rc?.d/*fprobe;
+
 					;;
 
 					*)
@@ -309,6 +312,7 @@ do
 						/etc/init.d/fprobe stop 2>/dev/null;
 						rm -rf /etc/init.d/fprobe /usr/sbin/fprobe;
 						/etc/init.d/softflowd start 2>/dev/null;
+						rm -rf /etc/rc.d/rc?.d/*fprobe;
 						echo;
 					;;
 
