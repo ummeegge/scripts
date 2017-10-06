@@ -27,8 +27,8 @@
 URL="http://people.ipfire.org/~ummeegge/Netflow/nfdump-fprob-nfsen/v2";
 PACKAGEA="nfsen_package-32bit-v2.tar.gz";
 PACKAGEB="nfsen_package-64bit-v2.tar.gz";
-SUMA="512390a62b52eb6e0089b5e12866b9bf09bba7aa91d957cf0c40c704607721bc";
-SUMB="04fa7a8098a8983f47c281b57e1be2e27a769327db19c27731104fb39913b52a";
+SUMA="db35f7e6b45132d79181b0540d3f1f03318fd41390b06e60eb6faf91c06832d8";
+SUMB="5fbb54cce88796824694c4f29e46d3dfcf75f401add981ceb35e6d7f9326376d";
 ## Packages
 FP="fprobe-1.1-*bit-1.ipfire";
 ND="nfdump-1.6.13-*bit-1.ipfire";
@@ -179,7 +179,7 @@ install_function() {
 	chown root:root ${VHOST}/nfsen.conf;
 	# Add green subnet and grenn IPFire ip for Nfsen vhost
 	sed -i "s/VirtualHost.*:/VirtualHost\ ${GREENADRR}:/" ${VHOST}/nfsen.conf;
-	sed -i "s/Allow\ from.*/Allow\ from\ ${GREENSUBN}\/${GREENMASK}/g" ${VHOST}/nfsen.conf;
+	sed -i "s/Require\ ip.*/Require\ ip\ ${GREENSUBN}\/${GREENMASK}/g" ${VHOST}/nfsen.conf;
 	## Install all packages
 	# Fprobe
 	cp -v ${FP} ${INSTDIR};
