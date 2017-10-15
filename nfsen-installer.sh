@@ -24,7 +24,7 @@
 #
 
 # Download address
-URL="http://people.ipfire.org/~ummeegge/Netflow/nfdump-fprob-nfsen/v2";
+URL="https://people.ipfire.org/~ummeegge/Netflow/nfdump-fprob-nfsen/v2";
 PACKAGEA="nfsen_package-32bit-v2.tar.gz";
 PACKAGEB="nfsen_package-64bit-v2.tar.gz";
 SUMA="db35f7e6b45132d79181b0540d3f1f03318fd41390b06e60eb6faf91c06832d8";
