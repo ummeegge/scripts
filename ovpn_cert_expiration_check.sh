@@ -1,14 +1,25 @@
 #!/bin/bash -x
 
-# cert_check.sh
+# ovpn_cert_expiration_check.sh
 #
-# ummeegge 01.09.2014
-##################################################################
+# $author: ummeegge ipfire org ; $date: 20.10.2017 - 15:24:08
+#########################################################################
 # This script checks OpenVPNs index.txt for how much time is left
 # until a client certificate will be expired.
 # Certificats with OpenSSL maximum (999999) are excluded.
 # Time should be configured by the individual needs,
 # but is currently configured to 5 days.
+#
+# Days before can be defined in the "ALERT=5" variable.
+# An own Email account should be presant for this since the Email account
+#     password are stored in cleartext in the script.
+# Script provides Email encryption via GPG.
+#     An howto setup can be found in here --> http://wiki.ipfire.org/en/optimization/scripts/gpg/start .
+# Email function is currently commented to check the script functionality.
+# Own Email credentials needs to be set in the script (section herefor are marked).
+# Clean up $WORKDIR in /tmp is currently commented to investigate file results.
+# Script can be placed e.g. into /etc/fcron.daily .
+#     All paths has been set absolute so the fcron environment should find all binaries.
 #
 
 ## Paths, dirs and files
