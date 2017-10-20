@@ -71,7 +71,7 @@ This repo contains currently:
 	- fprobe grabs 'any' interfaces.
 	- fprobe configuration can be made over /etc/rc.d/init.d/fprobe.
 
-- cert_check.sh checks certificates expiring dates and delivers alarm (defaut is) 5 days before it expires.
+- ovpn_cert_expiration_check.sh checks certificates expiring dates and delivers alarm (defaut is) 5 days before it expires.
 
     - Days before can be defined in the "ALERT=5" variable.
     - An own Email account should be presant for this since the Email account password are stored in cleartext in the script.
