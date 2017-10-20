@@ -78,7 +78,7 @@ PUBKEYID="2F033721";
 
 #################################################### Main part #########################################################
 ## Searcher
-certs_date=$(/usr/bin/awk '/^V/ {print $2}' ${INDEX} | cut -c1-6 | grep '^1');
+certs_date=$(/usr/bin/awk '/^V/ {print $2}' ${INDEX} | cut -c1-6 | grep -E '^1|^2');
 
 ## Time values
 NOW=$(date +%s);
@@ -106,7 +106,7 @@ done >> ${COUNTERLIST};
 /usr/bin/paste {$COUNTERLIST,$CERTLIST} > ${MERGED};
 
 # Check for alert and prepare mail
-/usr/bin/awk -v var="$ALERT" '$1<=var' ${MERGED} > ${MAIL};
+/usr/bin/awk -v var="$ALERT" '$1<=var' ${MERGED} | sed 's/^-//g' > ${MAIL};
 
 # Check if alert should be fired
 if [ $(/bin/ls -l ${MAIL} | /usr/bin/awk '{print $5}') -ne 0 ]; then
