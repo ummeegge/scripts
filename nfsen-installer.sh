@@ -27,8 +27,8 @@
 URL="https://people.ipfire.org/~ummeegge/Netflow/nfdump-fprob-nfsen/v2";
 PACKAGEA="nfsen_package-32bit-v2.tar.gz";
 PACKAGEB="nfsen_package-64bit-v2.tar.gz";
-SUMA="db35f7e6b45132d79181b0540d3f1f03318fd41390b06e60eb6faf91c06832d8";
-SUMB="5fbb54cce88796824694c4f29e46d3dfcf75f401add981ceb35e6d7f9326376d";
+SUMA="4b6c2c45fd6c03b808a3ffe2294c511b5c5d763342da342f1bdcbe7300120591";
+SUMB="ea71ee0e0a7800c6a500b50755521512744a42d03addce28dcdbcb94e6252212";
 ## Packages
 FP="fprobe-1.1-*bit-1.ipfire";
 ND="nfdump-1.6.13-*bit-1.ipfire";
