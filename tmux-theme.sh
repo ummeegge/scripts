@@ -96,9 +96,10 @@ fi
 # Copy tmux.conf into HOME dir
 cat > ${CONF} << "EOF"
 # tmux configuration file
-# should takes place under ~/ as .tmux.conf
-###########################################
-# ummeegge 04.01.2014
+# can takes place for user root under ´/root/.tmux.conf .
+# As a system wide configuration file in case there are more users on IPFire platform,
+# you can also use /etc/tmux.conf
+#######################################################################################
 #
 
 # set defaults
@@ -107,13 +108,13 @@ set-option -g default-command "bash -l"
 set-option -g default-terminal "screen-256color"
 #
 
-# remap prefix to Control + a
+# remap prefix to Control + a instead of the default Control + b to screen like style
 set -g prefix C-a
 unbind C-b
 bind C-a send-prefix
 #
 
-# reload config
+# reload config also works while a session, please adapt it to your needs in case of a system wide configuration
 bind r source-file ~/.tmux.conf \; display-message "Reload config file..."
 #
 
@@ -126,15 +127,6 @@ set -g visual-activity on
 set -g history-limit 10000
 #
 
-# Scroll, resize window and switch between the panes with the mouse
-# The terminal.app in OS X needs simbl und MouseTerm
-set-option -g mouse-utf8 on
-set-option -g mouse-select-pane on
-set-option -g mouse-select-window on
-set-option -g mouse-resize-pane on
-set-window-option -g mode-mouse on
-#
-
 # Status bar
 # set color for status bar
 set-option -g status-bg colour235 #base02
@@ -142,12 +134,12 @@ set-option -g status-fg yellow #yellow
 set-option -g status-attr dim
 # Show host name and IP address on left side of status bar
 set -g status-left-length 70
-set -g status-left "#[fg=green] #h - #[fg=brightred]#(curl -s ipecho.net/plain; echo) #[fg=green]|"
+set -g status-left "#[fg=green] #h - #[fg=brightred]#(curl -s https://api.ipify.org) #[fg=green]|"
 
 # Define right statusbar lenght
 set -g status-right-length 60
-# Show value of logged on users, how much RAM is free and clock currently activated
-set -g status-right "#[fg=green]| #[fg=yellow]Users:#[fg=brightred]#(who | wc -l)#[fg=green] - #[fg=yellow]Mem:#[fg=brightred]#(free -m | awk '/Mem:/ {print $4}')#[fg=yellow]MB Free#[fg=green] - #[fg=yellow]Use:#[fg=brightred]#(df -m /var | tail -1 | awk '{print $5}')#[fg=yellow]in /var "
+# Show value of logged on users, how much RAM is free and how much HDD space are used in /var.
+set -g status-right "#[fg=green]| #[fg=yellow]Users:#[fg=brightred]#(who | wc -l)#[fg=green] - #[fg=yellow]Mem:#[fg=brightred]#(free -m | awk '/Mem:/ {print $4}')#[fg=yellow]MB Free#[fg=green] - #[fg=yellow]Use:#[fg=brightred]#(df -h | awk '/sda4/ {print $5}')#[fg=yellow]in /var "
 # Center window tabs
 set -g status-justify centre
 #
