@@ -89,12 +89,13 @@ if [[ ! -e "${FHOL}" ]]; then
 fi   
 
 # Create appropriate sets with counter if not already done
-if ipset -n list | grep -q ${SETFCIDR}; then
+if [[ -z "$(ipset -n list | grep ${SETFCIDR})" ]]; then
    ipset create ${SETFCIDR} hash:net counters;
 fi
-if ipset -n list | grep -q ${SETFIP}; then
+if [[ -z "$(ipset -n list | grep ${SETFIP})" ]]; then
    ipset create ${SETFIP} hash:ip counters;
 fi
+
 # Check for rc.local entry
 if ! grep -q 'ipset' ${RC}; then
       echo "${IPSET} restore < ${CONF}" >> ${RC} && /etc/sysconfig/firewall.local reload;
