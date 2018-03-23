@@ -280,6 +280,14 @@ do
 	# Install Server
 	case $choice in
 		i*|I*)
+            # Check if PHP is available
+            if [ ! -e "/usr/bin/php" ]; then
+                echo
+                echo -e "${R}There is no PHP available on this platform so OSSECs WI won´t work. Need to quit... ${N}"
+                echo
+                sleep 3
+                exit 1
+            fi
 			if [ ! -e /srv/web/nfsen ]; then
 				download_function;
 				install_function;
