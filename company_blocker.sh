@@ -92,7 +92,7 @@ while true; do
       # Go to working directory
       cd /tmp || exit 1;
       # Clean up existing files if presant
-      if [[ -f "${RAWAD}" || -f "${ASN}" || -f "{COMPANIES}" || -f "${SORTAD}" ]]; then
+      if [[ -f "${RAWAD}" || -f "${ASN}" || -f "${COMPANIES}" || -f "${SORTAD}" ]]; then
         rm -f ${RAWAD} ${ASN} ${COMPANIES} ${SORTAD} > /dev/null 2>&1;
       fi
       # Ask for companies
